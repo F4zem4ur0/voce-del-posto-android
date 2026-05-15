@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,7 @@ public class PlacesActivity extends AppCompatActivity {
     private RecyclerView rvPlaces;
     private PlacesAdapter adapter;
     private FusedLocationProviderClient fusedLocationClient;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class PlacesActivity extends AppCompatActivity {
         rvPlaces.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PlacesAdapter(this, new ArrayList<>());
         rvPlaces.setAdapter(adapter);
+        progressBar = findViewById(R.id.progressBar);
 
         findViewById(R.id.btnRecommendations).setOnClickListener(v ->
                 startActivity(new Intent(this, RecommendationsActivity.class)));
@@ -74,20 +78,20 @@ public class PlacesActivity extends AppCompatActivity {
     private void getLocationAndLoad() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            loadNearbyPlaces(44.8015, 10.3279, 5.0); // fallback Parma
+            loadNearbyPlaces(44.8015, 10.3279, 5.0);
             return;
         }
 
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+        fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
                         loadNearbyPlaces(location.getLatitude(), location.getLongitude(), 5.0);
                     } else {
-                        loadNearbyPlaces(44.8015, 10.3279, 5.0); // fallback Parma
+                        loadNearbyPlaces(44.8015, 10.3279, 5.0);
                     }
                 })
                 .addOnFailureListener(e ->
-                        loadNearbyPlaces(44.8015, 10.3279, 5.0)); // fallback Parma
+                        loadNearbyPlaces(44.8015, 10.3279, 5.0));
     }
 
     @Override
@@ -98,17 +102,19 @@ public class PlacesActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocationAndLoad();
             } else {
-                loadNearbyPlaces(44.8015, 10.3279, 5.0); // fallback Parma
+                loadNearbyPlaces(44.8015, 10.3279, 5.0);
             }
         }
     }
 
     private void loadNearbyPlaces(double lat, double lon, double radius) {
+        progressBar.setVisibility(View.VISIBLE);
         RetrofitClient.getInstance().getApiService()
                 .getPlacesNearby(lat, lon, radius)
                 .enqueue(new Callback<List<Place>>() {
                     @Override
                     public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
+                        progressBar.setVisibility(View.GONE);
                         if (response.isSuccessful() && response.body() != null) {
                             adapter.updatePlaces(response.body());
                         }
@@ -116,7 +122,7 @@ public class PlacesActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<List<Place>> call, Throwable t) {
-                        // fallback silenzioso
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
