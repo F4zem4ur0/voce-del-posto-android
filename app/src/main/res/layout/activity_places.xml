@@ -24,6 +24,12 @@
             android:layout_height="wrap_content"
             android:text="Per te"
             style="@style/Widget.Material3.Button.OutlinedButton"/>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Esci"
+            style="@style/Widget.Material3.Button.OutlinedButton"/>
 
     </LinearLayout>
 

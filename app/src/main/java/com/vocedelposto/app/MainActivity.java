@@ -28,6 +28,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Controlla se c'è già un token salvato
+        SharedPreferences prefs = getSharedPreferences("voce_del_posto", MODE_PRIVATE);
+        String savedToken = prefs.getString("token", null);
+        if (savedToken != null) {
+            RetrofitClient.getInstance().setAuthToken(savedToken);
+            startActivity(new Intent(this, PlacesActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
 
         etEmail = findViewById(R.id.etEmail);
