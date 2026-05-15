@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.PlacesActivity"/>
+        <activity android:name=".ui.ReviewActivity"/>
+        <activity android:name=".ui.RecommendationsActivity"/>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.vocedelposto.app.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,10 @@ import java.util.List;
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewHolder> {
 
     private List<Place> places;
+    private Context context;
 
-    public PlacesAdapter(List<Place> places) {
+    public PlacesAdapter(Context context, List<Place> places) {
+        this.context = context;
         this.places = places;
     }
 
@@ -35,6 +39,13 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewH
         holder.tvName.setText(place.getName());
         holder.tvAddress.setText(place.getAddress() != null ? place.getAddress() : "");
         holder.tvCategory.setText(place.getCategory() != null ? place.getCategory() : "");
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ReviewActivity.class);
+            intent.putExtra("placeId", place.getId());
+            intent.putExtra("placeName", place.getName());
+            context.startActivity(intent);
+        });
     }
 
     @Override

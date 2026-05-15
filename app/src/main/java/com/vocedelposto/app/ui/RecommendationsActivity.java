@@ -1,8 +1,9 @@
 package com.vocedelposto.app.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,49 +20,48 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PlacesActivity extends AppCompatActivity {
+public class RecommendationsActivity extends AppCompatActivity {
 
-    private RecyclerView rvPlaces;
+    private RecyclerView rvRecommendations;
     private PlacesAdapter adapter;
+    private TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_places);
+        setContentView(R.layout.activity_recommendations);
 
-        // Recupera il token salvato e lo imposta nel client
         SharedPreferences prefs = getSharedPreferences("voce_del_posto", MODE_PRIVATE);
-        String token = prefs.getString("token", null);
-        if (token != null) {
-            RetrofitClient.getInstance().setAuthToken(token);
-        }
+        Long userId = prefs.getLong("userId", -1);
 
-        rvPlaces = findViewById(R.id.rvPlaces);
-        rvPlaces.setLayoutManager(new LinearLayoutManager(this));
+        tvEmpty = findViewById(R.id.tvEmpty);
+        rvRecommendations = findViewById(R.id.rvRecommendations);
+        rvRecommendations.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PlacesAdapter(this, new ArrayList<>());
-        rvPlaces.setAdapter(adapter);
-        findViewById(R.id.btnRecommendations).setOnClickListener(v -> {
-            startActivity(new Intent(this, RecommendationsActivity.class));
-        });
+        rvRecommendations.setAdapter(adapter);
 
-        // Coordinate di Parma centro come default
-        loadNearbyPlaces(44.8015, 10.3279, 5.0);
+        loadRecommendations(userId);
     }
 
-    private void loadNearbyPlaces(double lat, double lon, double radius) {
+    private void loadRecommendations(Long userId) {
         RetrofitClient.getInstance().getApiService()
-                .getPlacesNearby(lat, lon, radius)
+                .getRecommendations(userId)
                 .enqueue(new Callback<List<Place>>() {
                     @Override
                     public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            adapter.updatePlaces(response.body());
+                            List<Place> places = response.body();
+                            if (places.isEmpty()) {
+                                tvEmpty.setVisibility(View.VISIBLE);
+                            } else {
+                                adapter.updatePlaces(places);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<List<Place>> call, Throwable t) {
-                        // gestiremo gli errori dopo
+                        tvEmpty.setVisibility(View.VISIBLE);
                     }
                 });
     }

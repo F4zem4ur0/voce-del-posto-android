@@ -3,6 +3,7 @@ package com.vocedelposto.app.network;
 import com.vocedelposto.app.model.AuthRequest;
 import com.vocedelposto.app.model.AuthResponse;
 import com.vocedelposto.app.model.Place;
+import com.vocedelposto.app.model.ReviewRequest;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -26,4 +28,10 @@ public interface ApiService {
             @Query("lon") double lon,
             @Query("radius") double radius
     );
+
+    @POST("reviews")
+    Call<Void> createReview(@Body ReviewRequest review);
+
+    @GET("recommendations/{userId}")
+    Call<List<Place>> getRecommendations(@Path("userId") Long userId);
 }
