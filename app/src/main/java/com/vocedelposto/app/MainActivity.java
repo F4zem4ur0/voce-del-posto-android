@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         String savedToken = prefs.getString("token", null);
         if (savedToken != null) {
             RetrofitClient.getInstance().setAuthToken(savedToken);
-            startActivity(new Intent(this, PlacesActivity.class));
+            startActivity(new Intent(this, HomeActivity.class));
             finish();
             return;
         }
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitClient.getInstance().setAuthToken(authResponse.getToken());
 
-        Intent intent = new Intent(this, PlacesActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
