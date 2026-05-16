@@ -61,6 +61,9 @@ public class PlacesActivity extends AppCompatActivity {
 
         findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
 
+        findViewById(R.id.btnTags).setOnClickListener(v ->
+                startActivity(new Intent(this, TagsActivity.class)));
+
         requestLocationAndLoad();
     }
 

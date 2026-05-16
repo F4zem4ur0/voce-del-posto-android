@@ -25,6 +25,12 @@
             android:text="Per te"
             style="@style/Widget.Material3.Button.OutlinedButton"/>
         <Button
+            android:id="@+id/btnTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tag"
+            style="@style/Widget.Material3.Button.OutlinedButton"/>
+        <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,5 +49,6 @@
         android:id="@+id/rvPlaces"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
 </LinearLayout>

@@ -11,8 +11,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
+import com.vocedelposto.app.model.Tag;
 
 public interface ApiService {
 
@@ -40,4 +43,13 @@ public interface ApiService {
             @Query("userId") Long userId,
             @Query("placeId") Long placeId
     );
+
+    @GET("tags")
+    Call<List<Tag>> getAllTags();
+
+    @GET("users/{id}/tags")
+    Call<List<Tag>> getUserTags(@Path("id") Long userId);
+
+    @PUT("users/{id}/tags")
+    Call<Void> updateUserTags(@Path("id") Long userId, @Body List<Tag> tags);
 }
