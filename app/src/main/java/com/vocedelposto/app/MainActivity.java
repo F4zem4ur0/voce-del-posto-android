@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.vocedelposto.app.model.AuthRequest;
 import com.vocedelposto.app.model.AuthResponse;
 import com.vocedelposto.app.network.RetrofitClient;
-import com.vocedelposto.app.ui.PlacesActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;

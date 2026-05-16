@@ -24,9 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.PlacesActivity"/>
         <activity android:name=".ui.ReviewActivity"/>
-        <activity android:name=".ui.RecommendationsActivity"/>
         <activity android:name=".ui.TagsActivity"/>
         <activity android:name=".HomeActivity"/>
     </application>

@@ -1,7 +1,7 @@
 package com.vocedelposto.app.fragment;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +10,17 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.vocedelposto.app.R;
 import com.vocedelposto.app.model.Place;
 import com.vocedelposto.app.network.RetrofitClient;
 import com.vocedelposto.app.ui.PlacesAdapter;
-import com.vocedelposto.app.ui.ReviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +29,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class NearbyFragment extends Fragment {
 
+    private static final int LOCATION_PERMISSION_REQUEST = 1001;
     private RecyclerView rvPlaces;
     private PlacesAdapter adapter;
     private ProgressBar progressBar;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Nullable
     @Override
@@ -46,13 +48,56 @@ public class NearbyFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
         progressBar = view.findViewById(R.id.progressBar);
         rvPlaces = view.findViewById(R.id.rvPlaces);
         rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PlacesAdapter(getContext(), new ArrayList<>());
         rvPlaces.setAdapter(adapter);
 
-        loadNearbyPlaces(44.8015, 10.3279, 5.0);
+        requestLocationAndLoad();
+    }
+
+    private void requestLocationAndLoad() {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST);
+        } else {
+            getLocationAndLoad();
+        }
+    }
+
+    private void getLocationAndLoad() {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            loadNearbyPlaces(44.8015, 10.3279, 5.0);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        loadNearbyPlaces(location.getLatitude(), location.getLongitude(), 5.0);
+                    } else {
+                        loadNearbyPlaces(44.8015, 10.3279, 5.0);
+                    }
+                })
+                .addOnFailureListener(e -> loadNearbyPlaces(44.8015, 10.3279, 5.0));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLocationAndLoad();
+            } else {
+                loadNearbyPlaces(44.8015, 10.3279, 5.0);
+            }
+        }
     }
 
     private void loadNearbyPlaces(double lat, double lon, double radius) {
