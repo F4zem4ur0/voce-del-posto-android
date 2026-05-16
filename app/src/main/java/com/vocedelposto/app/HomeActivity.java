@@ -43,10 +43,6 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-        // carica il fragment iniziale
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new NearbyFragment())
-                .commit();
+        bottomNav.setSelectedItemId(R.id.nav_recommendations);
     }
 }

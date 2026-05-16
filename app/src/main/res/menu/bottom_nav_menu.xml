@@ -5,7 +5,7 @@
         android:id="@+id/nav_nearby"
         android:icon="@android:drawable/ic_menu_mylocation"
         android:title="Vicino a te"/>
-
+    <!-- invertire questi due per cambiare l'ordine nella navbar -->
     <item
         android:id="@+id/nav_recommendations"
         android:icon="@android:drawable/ic_menu_compass"
