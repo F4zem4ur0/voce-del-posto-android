@@ -58,4 +58,14 @@
         android:layout_marginTop="16dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/tvAlreadyReviewed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hai già recensito questo posto!"
+        android:textSize="16sp"
+        android:textColor="#888888"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"/>
+
 </LinearLayout>

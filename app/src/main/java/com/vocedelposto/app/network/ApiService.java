@@ -34,4 +34,10 @@ public interface ApiService {
 
     @GET("recommendations/{userId}")
     Call<List<Place>> getRecommendations(@Path("userId") Long userId);
+
+    @GET("reviews/exists")
+    Call<Boolean> checkReviewExists(
+            @Query("userId") Long userId,
+            @Query("placeId") Long placeId
+    );
 }

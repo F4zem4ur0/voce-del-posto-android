@@ -20,13 +20,14 @@ import retrofit2.Response;
 
 public class ReviewActivity extends AppCompatActivity {
 
-    private TextView tvPlaceName, tvError;
+    private TextView tvPlaceName, tvError, tvAlreadyReviewed;
     private RatingBar ratingBar;
     private EditText etComment;
     private Button btnSubmit;
 
     private Long placeId;
     private String placeName;
+    private Long userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +37,52 @@ public class ReviewActivity extends AppCompatActivity {
         placeId = getIntent().getLongExtra("placeId", -1);
         placeName = getIntent().getStringExtra("placeName");
 
+        SharedPreferences prefs = getSharedPreferences("voce_del_posto", MODE_PRIVATE);
+        userId = prefs.getLong("userId", -1);
+
         tvPlaceName = findViewById(R.id.tvPlaceName);
         ratingBar = findViewById(R.id.ratingBar);
         etComment = findViewById(R.id.etComment);
         btnSubmit = findViewById(R.id.btnSubmit);
         tvError = findViewById(R.id.tvError);
+        tvAlreadyReviewed = findViewById(R.id.tvAlreadyReviewed);
 
         tvPlaceName.setText(placeName);
 
+        ratingBar.setVisibility(View.GONE);
+        etComment.setVisibility(View.GONE);
+        btnSubmit.setVisibility(View.GONE);
+
+        checkIfAlreadyReviewed();
+
         btnSubmit.setOnClickListener(v -> submitReview());
+    }
+
+    private void checkIfAlreadyReviewed() {
+        RetrofitClient.getInstance().getApiService()
+                .checkReviewExists(userId, placeId)
+                .enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body()) {
+                            // ha già recensito — nascondi il form
+                            ratingBar.setVisibility(View.GONE);
+                            etComment.setVisibility(View.GONE);
+                            btnSubmit.setVisibility(View.GONE);
+                            tvAlreadyReviewed.setVisibility(View.VISIBLE);
+                        } else {
+                            // non ha ancora recensito — mostra il form
+                            ratingBar.setVisibility(View.VISIBLE);
+                            etComment.setVisibility(View.VISIBLE);
+                            btnSubmit.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        // in caso di errore lasciamo il form visibile
+                    }
+                });
     }
 
     private void submitReview() {
@@ -56,9 +94,6 @@ public class ReviewActivity extends AppCompatActivity {
             return;
         }
 
-        SharedPreferences prefs = getSharedPreferences("voce_del_posto", MODE_PRIVATE);
-        Long userId = prefs.getLong("userId", -1);
-
         btnSubmit.setEnabled(false);
         ReviewRequest request = new ReviewRequest(userId, placeId, rating, comment);
 
@@ -69,7 +104,7 @@ public class ReviewActivity extends AppCompatActivity {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         btnSubmit.setEnabled(true);
                         if (response.isSuccessful()) {
-                            finish(); // torna alla lista posti
+                            finish();
                         } else {
                             showError("Errore nell'invio della recensione");
                         }
