@@ -27,6 +27,7 @@
         <activity android:name=".ui.ReviewActivity"/>
         <activity android:name=".ui.TagsActivity"/>
         <activity android:name=".HomeActivity"/>
+        <activity android:name=".ui.PlaceDetailActivity"/>
     </application>
 
 </manifest>

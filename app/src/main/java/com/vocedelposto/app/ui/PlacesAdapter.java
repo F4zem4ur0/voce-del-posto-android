@@ -41,9 +41,14 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewH
         holder.tvCategory.setText(place.getCategory() != null ? place.getCategory() : "");
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ReviewActivity.class);
+            Intent intent = new Intent(context, PlaceDetailActivity.class);
             intent.putExtra("placeId", place.getId());
             intent.putExtra("placeName", place.getName());
+            intent.putExtra("placeCategory", place.getCategory());
+            intent.putExtra("placeAddress", place.getAddress());
+            intent.putExtra("placePhone", place.getPhone());
+            intent.putExtra("placeWebsite", place.getWebsite());
+            intent.putExtra("placeHours", place.getOpeningHours());
             context.startActivity(intent);
         });
     }

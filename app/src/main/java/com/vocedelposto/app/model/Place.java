@@ -27,4 +27,21 @@ public class Place {
     public String getCategory() { return category; }
     public Double getLatitude() { return latitude; }
     public Double getLongitude() { return longitude; }
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("website")
+    private String website;
+
+    @SerializedName("openingHours")
+    private String openingHours;
+
+    @SerializedName("description")
+    private String description;
+
+    public String getPhone() { return phone; }
+    public String getWebsite() { return website; }
+    public String getOpeningHours() { return openingHours; }
+    public String getDescription() { return description; }
 }
