@@ -16,18 +16,20 @@
         android:theme="@style/Theme.VoceDelPosto">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity"/>
         <activity android:name=".ui.ReviewActivity"/>
         <activity android:name=".ui.TagsActivity"/>
         <activity android:name=".HomeActivity"/>
         <activity android:name=".ui.PlaceDetailActivity"/>
+        <activity android:name=".ui.OnboardingActivity"/>
     </application>
 
 </manifest>

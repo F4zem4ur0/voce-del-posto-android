@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.vocedelposto.app.model.AuthRequest;
 import com.vocedelposto.app.model.AuthResponse;
 import com.vocedelposto.app.network.RetrofitClient;
+import com.vocedelposto.app.ui.OnboardingActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -124,7 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitClient.getInstance().setAuthToken(authResponse.getToken());
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        boolean onboardingCompleted = prefs.getBoolean("onboarding_completed", false);
+        Intent intent;
+        if (onboardingCompleted) {
+            intent = new Intent(this, HomeActivity.class);
+        } else {
+            intent = new Intent(this, OnboardingActivity.class);
+        }
         startActivity(intent);
         finish();
     }
