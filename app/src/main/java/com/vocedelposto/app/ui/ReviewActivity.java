@@ -122,4 +122,5 @@ public class ReviewActivity extends AppCompatActivity {
         tvError.setText(message);
         tvError.setVisibility(View.VISIBLE);
     }
+
 }

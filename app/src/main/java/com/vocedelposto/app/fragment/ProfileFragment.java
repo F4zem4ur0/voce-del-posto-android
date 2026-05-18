@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.vocedelposto.app.MainActivity;
 import com.vocedelposto.app.R;
 import com.vocedelposto.app.network.RetrofitClient;
+import com.vocedelposto.app.ui.MyReviewsActivity;
 import com.vocedelposto.app.ui.TagsActivity;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -84,7 +85,7 @@ public class ProfileFragment extends Fragment {
 
         // le mie recensioni
         view.<Button>findViewById(R.id.btnMyReviews).setOnClickListener(v ->
-                Toast.makeText(getContext(), "Funzione in arrivo!", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(getContext(), MyReviewsActivity.class)));
 
         // logout
         view.<Button>findViewById(R.id.btnLogout).setOnClickListener(v -> {

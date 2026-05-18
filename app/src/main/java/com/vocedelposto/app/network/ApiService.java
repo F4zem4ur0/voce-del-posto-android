@@ -3,6 +3,7 @@ package com.vocedelposto.app.network;
 import com.vocedelposto.app.model.AuthRequest;
 import com.vocedelposto.app.model.AuthResponse;
 import com.vocedelposto.app.model.Place;
+import com.vocedelposto.app.model.Review;
 import com.vocedelposto.app.model.ReviewRequest;
 
 import java.util.List;
@@ -52,4 +53,7 @@ public interface ApiService {
 
     @PUT("users/{id}/tags")
     Call<Void> updateUserTags(@Path("id") Long userId, @Body List<Tag> tags);
+
+    @GET("reviews/user/{userId}")
+    Call<List<Review>> getUserReviews(@Path("userId") Long userId);
 }
