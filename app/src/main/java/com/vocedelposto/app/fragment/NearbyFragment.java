@@ -70,21 +70,25 @@ public class NearbyFragment extends Fragment {
     }
 
     private void getLocationAndLoad() {
+        android.content.SharedPreferences prefs = requireContext()
+                .getSharedPreferences("voce_del_posto", android.content.Context.MODE_PRIVATE);
+        double radius = prefs.getInt("search_radius", 5);
+
         if (ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            loadNearbyPlaces(44.8015, 10.3279, 5.0);
+            loadNearbyPlaces(44.8015, 10.3279, radius);
             return;
         }
 
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
-                        loadNearbyPlaces(location.getLatitude(), location.getLongitude(), 5.0);
+                        loadNearbyPlaces(location.getLatitude(), location.getLongitude(), radius);
                     } else {
-                        loadNearbyPlaces(44.8015, 10.3279, 5.0);
+                        loadNearbyPlaces(44.8015, 10.3279, radius);
                     }
                 })
-                .addOnFailureListener(e -> loadNearbyPlaces(44.8015, 10.3279, 5.0));
+                .addOnFailureListener(e -> loadNearbyPlaces(44.8015, 10.3279, radius));
     }
 
     @Override
@@ -95,7 +99,10 @@ public class NearbyFragment extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocationAndLoad();
             } else {
-                loadNearbyPlaces(44.8015, 10.3279, 5.0);
+                android.content.SharedPreferences prefs = requireContext()
+                        .getSharedPreferences("voce_del_posto", android.content.Context.MODE_PRIVATE);
+                double radius = prefs.getInt("search_radius", 5);
+                loadNearbyPlaces(44.8015, 10.3279, radius);
             }
         }
     }
