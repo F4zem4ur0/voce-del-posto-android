@@ -45,7 +45,7 @@ public class MyReviewsActivity extends AppCompatActivity {
                             if (response.body().isEmpty()) {
                                 tvEmpty.setVisibility(View.VISIBLE);
                             } else {
-                                rvReviews.setAdapter(new MyReviewsAdapter(response.body()));
+                                rvReviews.setAdapter(new MyReviewsAdapter(MyReviewsActivity.this, response.body()));
                             }
                         }
                     }

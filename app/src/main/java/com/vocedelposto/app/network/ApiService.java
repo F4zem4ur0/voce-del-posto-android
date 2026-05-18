@@ -56,4 +56,7 @@ public interface ApiService {
 
     @GET("reviews/user/{userId}")
     Call<List<Review>> getUserReviews(@Path("userId") Long userId);
+
+    @PUT("reviews/{id}")
+    Call<Void> updateReview(@Path("id") Long reviewId, @Body ReviewRequest review);
 }
